@@ -1,7 +1,13 @@
 import axios from "axios";
 export default class CategoriaApi {
-  async buscarTodasAsCategorias(page, search = "") {
-    const { data } = await axios.get(`/categorias/?page=${page}&search=${search}`);
+  async buscarTodasAsCategorias(page = 1, search = "") {
+    const { data } = await axios.get("/categorias/", {
+      params: {
+        page,
+        search: search.trim()
+      }
+    });
+
     return data;
   }
   async adicionarCategoria(categoria) {

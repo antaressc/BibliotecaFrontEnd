@@ -1,7 +1,13 @@
 import axios from "axios";
 export default class AutorApi {
   async buscarTodosOsAutores(page = 1, search = "") {
-    const { data } = await axios.get(`/autores/?page=${page}&search=${search}`);
+    const { data } = await axios.get("/autores/", {
+      params: {
+        page,
+        search: search.trim()
+      }
+    });
+
     return data;
   }
   async adicionarAutor(autor) {

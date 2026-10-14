@@ -33,6 +33,7 @@ const defaultLivro = {
   capa: '',
   capa_attachment_key: '',
   isbn: '',
+  formato: '',
   categoria: '',
   autores: [],
   editora: '',
@@ -47,6 +48,7 @@ const livro = reactive({
 const autores = ref([])
 const editoras = ref([])
 const categorias = ref([])
+const formatos = ref(['Livro', 'Revista', 'Apostila', 'Manual', 'Norma técnica'])
 const busca = ref('')
 const capaArquivo = ref(null)
 const capaPreview = ref('')
@@ -57,6 +59,7 @@ let buscaTimer = null
 function capaUrl(capa) {
   return capa?.url || ''
 }
+
 
 async function carregarOpcoes() {
   try {
@@ -76,8 +79,21 @@ async function carregarOpcoes() {
     editoras.value =
       editorasData.results || editorasData
 
-    categorias.value =
-      categoriasData.results || categoriasData
+    const categoriasCarregadas = [
+      ...(categoriasData.results || categoriasData)
+    ]
+
+    const totalPaginas = categoriasData.total_pages || 1
+
+    for (let pagina = 2; pagina <= totalPaginas; pagina++) {
+      const resposta = await categoriaApi.buscarTodasAsCategorias(pagina)
+
+      categoriasCarregadas.push(
+        ...(resposta.results || resposta)
+      )
+    }
+
+    categorias.value = categoriasCarregadas
 
   } catch (error) {
     console.error(
@@ -91,7 +107,6 @@ async function carregarOpcoes() {
     )
   }
 }
-
 
 onMounted(async () => {
   await Promise.all([
@@ -299,21 +314,17 @@ function editar(l) {
 
 <template>
 
-<div class="page">
+  <div class="page">
 
-<div class="page">
+    <div class="page-header">
+      <button class="btn-voltar" @click="voltarInicio" title="Voltar">
+        &lt;
+      </button>
 
-  <div class="page-header">
-    <button class="btn-voltar" @click="voltarInicio" title="Voltar">
-      &lt;
-    </button>
-
-    <h1 class="page-title">
-      Livros
-    </h1>
-  </div>
-
-  </div>
+      <h1 class="page-title">
+        Livros
+      </h1>
+    </div>
 
     <div class="form-row">
 
@@ -429,6 +440,15 @@ function editar(l) {
       </div>
 
       <div class="form-group">
+        <label class="label" for="livro-formato">Formato:</label>
+        <select id="livro-formato" v-model="livro.formato" class="input-formato">
+          <option v-for="formato in formatos" :key="formato" :value="formato">
+            {{ formato }}
+          </option>
+        </select>
+      </div>
+
+      <div class="form-group">
         <label class="label" for="livro-sinopse">
           Sinopse
         </label>
@@ -510,13 +530,12 @@ function editar(l) {
         de
         {{ livroStore.meta.total_pages }}
       </span>
-
     </div>
   </div>
-
 </template>
 
 <style scoped>
+
 .page-header {
   display: flex;
   flex-direction: row;
@@ -573,7 +592,6 @@ function editar(l) {
 
 .input-quantidade {
   border: 1px solid var(--secondary);
-  width: 40%;
 }
 
 .input-arquivo {

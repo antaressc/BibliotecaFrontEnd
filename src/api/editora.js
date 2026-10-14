@@ -1,9 +1,16 @@
 import axios from "axios";
 export default class EditoraApi {
-  async buscarTodasAsEditoras(page, search = "") {
-    const { data } = await axios.get(`/editoras/?page=${page}&search=${search}`);
+
+  async buscarTodasAsEditoras(page = 1, search = "") {
+    const { data } = await axios.get("/editoras/", {
+      params: {
+        page,
+        search: search.trim()
+      }
+    });
     return data;
   }
+
   async adicionarEditora(editora) {
     const { data } = await axios.post("/editoras/", editora);
     return data;

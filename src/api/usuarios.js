@@ -1,21 +1,18 @@
 import axios from "axios";
 
 export default class UsuariosApi {
+
   async buscarTodosOsUsuarios(page = 1, search = "") {
-    const params = new URLSearchParams();
-
-    params.append("page", page);
-
-    if (search) {
-      params.append("search", search);
-    }
-
-    const { data } = await axios.get(
-      `/usuarios/?${params.toString()}`
-    );
+    const { data } = await axios.get("/usuarios/", {
+      params: {
+        page,
+        search: search.trim()
+      }
+    });
 
     return data;
   }
+
 
   async buscarUsuario(id) {
     const { data } = await axios.get(`/usuarios/${id}/`);

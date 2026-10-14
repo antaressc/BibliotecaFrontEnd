@@ -86,19 +86,21 @@ function badgeClass(status) {
 
 <template>
   <div class="page">
-  <div class="page-header">
-    <button class="btn-voltar" @click="voltarInicio" title="Voltar">
-      &lt;
-    </button>
+    <div class="page-header">
+      <button class="btn-voltar" @click="voltarInicio" title="Voltar">
+        &lt;
+      </button>
 
-    <h1 class="page-title">
-      {{ authStore.usuario?.is_superuser ? 'Reservas' : 'Minhas Reservas' }}
-    </h1>
-  </div>
 
-  <div v-if="!reservaStore.reservas.length" class="empty-state">
-    <p>Nenhuma reserva encontrada.</p>
-  </div>
+      <h1 class="page-title">
+        {{ authStore.user?.is_superuser ? 'Reservas' : 'Minhas Reservas' }}
+      </h1>
+
+    </div>
+
+    <div v-if="!reservaStore.reservas.length" class="empty-state">
+      <p>Nenhuma reserva encontrada.</p>
+    </div>
 
     <div class="reservas-list" v-else>
       <div v-for="reserva in reservaStore.reservas" :key="reserva.id" class="card">
@@ -119,7 +121,7 @@ function badgeClass(status) {
 
         <div class="usuario-info">
           <span v-if="reserva.usuario">
-          {{ reserva.usuario }}
+            {{ reserva.usuario }}
           </span>
         </div>
 

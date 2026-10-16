@@ -69,6 +69,8 @@ async function registrarRetirada(id) {
     toast.showToast('Retirada registrada com sucesso!', 'success')
     await reservaStore.getReservas()
   } catch (error) {
+    console.error('Erro ao registrar retirada:', error.response?.data)
+
     const mensagem =
       error.response?.data?.detail ||
       'Erro ao registrar a retirada.'
@@ -143,40 +145,57 @@ function badgeClass(status) {
           </span>
         </div>
 
-        <div class="reserva-info">
-          <span v-if="reserva.data_criacao">
-            {{ formatarData(reserva.data_criacao) }}
-          </span>
+        <!-- Nome do usuário -->
+        <div class="usuario-info" v-if="reserva.usuario">
+          <strong>Usuário:</strong> {{ reserva.usuario }}
         </div>
 
-        <div class="usuario-info">
-          <span v-if="reserva.usuario">
-            {{ reserva.usuario }}
-          </span>
-        </div>
-
+        <!-- Títulos dos livros -->
         <ul class="reserva-itens" v-if="reserva.itens?.length">
           <li v-for="(item, idx) in reserva.itens" :key="item.id || idx">
             {{ item.livro.titulo || item.livro }}
           </li>
         </ul>
 
+        <!-- Linha separadora -->
+        <hr class="divisor-reserva" />
+
+        <!-- Datas da reserva -->
+        <div class="datas-reserva">
+          <p v-if="reserva.data_criacao">
+            <strong>Data da reserva:</strong>
+            {{ formatarData(reserva.data_criacao) }}
+          </p>
+
+          <p v-if="reserva.data_retirada">
+            <strong>Data de retirada:</strong>
+            {{ formatarData(reserva.data_retirada) }}
+          </p>
+
+          <p v-if="reserva.data_devolucao_prevista">
+            <strong>Devolução prevista:</strong>
+            {{ formatarData(reserva.data_devolucao_prevista) }}
+          </p>
+
+          <p v-if="reserva.data_devolucao">
+            <strong>Data de devolução:</strong>
+            {{ formatarData(reserva.data_devolucao) }}
+          </p>
+        </div>
+
+        <!-- Botões existentes -->
         <button v-if="['reservado'].includes(reserva.status?.toLowerCase())" class="btn-cancelar"
           @click="cancelarReserva(reserva.id)">
           Cancelar reserva
         </button>
 
-        <button v-if="
-          authStore.user?.is_superuser &&
-          reserva.status?.toLowerCase() === 'reservado'
-        " class="btn-status btn-retirada" @click="registrarRetirada(reserva.id)">
+        <button v-if="authStore.user?.is_superuser && reserva.status?.toLowerCase() === 'reservado'"
+          class="btn-status btn-retirada" @click="registrarRetirada(reserva.id)">
           Registrar retirada
         </button>
 
-        <button v-if="
-          authStore.user?.is_superuser &&
-          reserva.status?.toLowerCase() === 'retirado'
-        " class="btn-status btn-devolucao" @click="registrarDevolucao(reserva.id)">
+        <button v-if="authStore.user?.is_superuser && reserva.status?.toLowerCase() === 'retirado'"
+          class="btn-status btn-devolucao" @click="registrarDevolucao(reserva.id)">
           Registrar devolução
         </button>
 
@@ -225,6 +244,38 @@ function badgeClass(status) {
 </template>
 
 <style scoped>
+.usuario-info {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  color: white;
+}
+
+.reserva-itens {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  color: white;
+}
+
+.reserva-itens li {
+  font-size: 0.9rem;
+  padding: 0.25rem 0;
+}
+
+.divisor-reserva {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.4);
+  margin: 0.75rem 0;
+}
+
+.datas-reserva {
+  color: white;
+  font-size: 0.875rem;
+}
+
+.datas-reserva p {
+  margin: 0.4rem 0;
+}
 
 .btn-status {
   margin-top: 1rem;
@@ -299,20 +350,6 @@ function badgeClass(status) {
   color: var(--muted-foreground);
   margin-bottom: 0.5rem;
   color: white;
-}
-
-.reserva-itens {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  border-top: 1px solid white;
-  padding-top: 0.5rem;
-  color: white;
-}
-
-.reserva-itens li {
-  font-size: 0.85rem;
-  padding: 0.25rem 0;
 }
 
 .card {
@@ -419,13 +456,6 @@ function badgeClass(status) {
   font-size: 0.875rem;
   color: var(--muted-foreground);
   margin-bottom: 0.5rem;
-  color: white;
-}
-
-.usuario-info {
-  text-align: left;
-  margin: 0 0 0.5rem 0;
-  font-size: 0.9rem;
   color: white;
 }
 

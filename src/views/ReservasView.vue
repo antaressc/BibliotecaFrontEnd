@@ -62,6 +62,36 @@ async function confirmarCancelamento() {
   }
 }
 
+async function registrarRetirada(id) {
+  try {
+    await reservaStore.registrarRetirada(id)
+
+    toast.showToast('Retirada registrada com sucesso!', 'success')
+    await reservaStore.getReservas()
+  } catch (error) {
+    const mensagem =
+      error.response?.data?.detail ||
+      'Erro ao registrar a retirada.'
+
+    toast.showToast(mensagem, 'error')
+  }
+}
+
+async function registrarDevolucao(id) {
+  try {
+    await reservaStore.registrarDevolucao(id)
+
+    toast.showToast('Devolução registrada com sucesso!', 'success')
+    await reservaStore.getReservas()
+  } catch (error) {
+    const mensagem =
+      error.response?.data?.detail ||
+      'Erro ao registrar a devolução.'
+
+    toast.showToast(mensagem, 'error')
+  }
+}
+
 function fecharPopupCancelar() {
   mostrarPopupCancelar.value = false
   reservaParaCancelar.value = null
@@ -136,6 +166,20 @@ function badgeClass(status) {
           Cancelar reserva
         </button>
 
+        <button v-if="
+          authStore.user?.is_superuser &&
+          reserva.status?.toLowerCase() === 'reservado'
+        " class="btn-status btn-retirada" @click="registrarRetirada(reserva.id)">
+          Registrar retirada
+        </button>
+
+        <button v-if="
+          authStore.user?.is_superuser &&
+          reserva.status?.toLowerCase() === 'retirado'
+        " class="btn-status btn-devolucao" @click="registrarDevolucao(reserva.id)">
+          Registrar devolução
+        </button>
+
       </div>
     </div>
 
@@ -181,6 +225,31 @@ function badgeClass(status) {
 </template>
 
 <style scoped>
+
+.btn-status {
+  margin-top: 1rem;
+  margin-right: 0.5rem;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.btn-status:hover {
+  opacity: 0.85;
+}
+
+.btn-retirada {
+  background-color: #198754;
+}
+
+.btn-devolucao {
+  background-color: #0d6efd;
+}
+
 .page-header {
   display: flex;
   align-items: center;

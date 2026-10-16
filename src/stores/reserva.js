@@ -79,6 +79,24 @@ export const useReservaStore = defineStore('reserva', () => {
     return data
   }
 
+
+  async function registrarRetirada(id) {
+    const data = await reservaApi.registrarRetirada(id)
+
+    await getReservas(meta.value.page || 1)
+
+    return data
+  }
+
+  async function registrarDevolucao(id) {
+    const data = await reservaApi.registrarDevolucao(id)
+
+    await getReservas(meta.value.page || 1)
+
+    return data
+  }
+
+
   return {
     reservas,
     reservaAtual,
@@ -89,7 +107,8 @@ export const useReservaStore = defineStore('reserva', () => {
     getReserva,
     criarReserva,
     cancelarReserva,
-
+    registrarRetirada,
+    registrarDevolucao,
     proximaPagina,
     paginaAnterior
   }

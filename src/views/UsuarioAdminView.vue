@@ -170,7 +170,6 @@ function voltarInicio() {
 
                 <div class="form-grid">
 
-                    <!-- Nome -->
                     <div class="form-group">
                         <label for="nome">
                             Nome
@@ -180,7 +179,6 @@ function voltarInicio() {
                             placeholder="Nome do usuário" autocomplete="name" />
                     </div>
 
-                    <!-- E-mail -->
                     <div class="form-group">
                         <label for="email">
                             E-mail
@@ -190,7 +188,6 @@ function voltarInicio() {
                             placeholder="E-mail do usuário" autocomplete="email" />
                     </div>
 
-                    <!-- Senha -->
                     <div v-if="!editando" class="form-group">
                         <label for="senha">
                             Senha
@@ -664,7 +661,6 @@ th {
     color: #374151;
 }
 
-/* Ações */
 
 .actions {
     display: flex;
@@ -690,8 +686,6 @@ th {
     color: #991b1b;
 }
 
-/* Estado vazio */
-
 .empty-state {
     padding: 50px 20px;
     text-align: center;
@@ -706,8 +700,6 @@ th {
     margin: 0;
 }
 
-/* Paginação */
-
 .pagination {
     display: flex;
     justify-content: center;
@@ -715,8 +707,6 @@ th {
     gap: 20px;
     margin-top: 25px;
 }
-
-/* Responsivo */
 
 @media (max-width: 900px) {
     .form-grid {

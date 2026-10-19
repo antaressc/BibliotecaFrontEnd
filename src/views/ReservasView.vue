@@ -145,22 +145,18 @@ function badgeClass(status) {
           </span>
         </div>
 
-        <!-- Nome do usuário -->
         <div class="usuario-info" v-if="reserva.usuario">
           <strong>Usuário:</strong> {{ reserva.usuario }}
         </div>
 
-        <!-- Títulos dos livros -->
         <ul class="reserva-itens" v-if="reserva.itens?.length">
           <li v-for="(item, idx) in reserva.itens" :key="item.id || idx">
             {{ item.livro.titulo || item.livro }}
           </li>
         </ul>
 
-        <!-- Linha separadora -->
         <hr class="divisor-reserva" />
 
-        <!-- Datas da reserva -->
         <div class="datas-reserva">
           <p v-if="reserva.data_criacao">
             <strong>Data da reserva:</strong>
@@ -183,7 +179,6 @@ function badgeClass(status) {
           </p>
         </div>
 
-        <!-- Botões existentes -->
         <button v-if="['reservado'].includes(reserva.status?.toLowerCase())" class="btn-cancelar"
           @click="cancelarReserva(reserva.id)">
           Cancelar reserva

@@ -84,17 +84,33 @@ async function handleRegister() {
   width: 100%;
   height: 100vh;
   box-sizing: border-box;
-
   background-image: url('@/assets/imagemBackground.jpg');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-
   padding: 0px;
 }
+
+.label{
+  color: white;
+}
+
+.card.auth-card{
+  border-color: black;
+}
+
+.card.auth-card input{
+  border-color: white;
+  color: white;
+}
+
+.btn{
+  background-color: white;
+  color: black;
+}
+
 </style>

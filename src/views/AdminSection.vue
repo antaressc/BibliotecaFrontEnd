@@ -17,10 +17,6 @@ defineProps({
 <template>
   <section class="admin-section">
 
-    <div class="section-title">
-      {{ title }}
-    </div>
-
     <div
       v-for="model in models"
       :key="model.name"
@@ -43,7 +39,7 @@ defineProps({
 }
 
 .section-title {
-  background: #447f98;
+  background: #0404e600;
   padding: 12px 15px;
   font-size: 16px;
   color: #fff;

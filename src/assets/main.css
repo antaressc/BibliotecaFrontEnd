@@ -180,7 +180,6 @@ textarea { resize: vertical; min-height: 60px; }
 .navbar {
   background: var(--primary); color: var(--primary-foreground);
   padding: 0 20px; height: 56px; display: flex; align-items: center;
-  border-bottom: 1px solid var(--border);
 }
 .navbar nav { display: flex; justify-content: space-between; align-items: center; width: 100%; }
 .nav-left, .nav-right { display: flex; align-items: center; gap: 4px; }

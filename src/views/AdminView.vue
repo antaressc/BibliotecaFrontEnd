@@ -37,7 +37,6 @@ const coreModels = [
       <h2>Administração do Sistema</h2>
 
       <AdminSection
-        title="CORE"
         :models="coreModels"
       />
 
@@ -47,6 +46,7 @@ const coreModels = [
 </template>
 
 <style scoped>
+
 .admin-page {
   min-height: 100vh;
   background: #232e3c;

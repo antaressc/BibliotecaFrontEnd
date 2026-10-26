@@ -18,6 +18,25 @@ const editoraApi = new EditoraApi()
 const categoriaApi = new CategoriaApi()
 const router = useRouter();
 const authStore = useAuthStore();
+const mostrarModalCadastro = ref(false)
+const tipoCadastro = ref('')
+const nomeNovoCadastro = ref('')
+const salvandoCadastro = ref(false)
+
+const tiposCadastro = {
+  categoria: {
+    titulo: 'Adicionar categoria',
+    campo: 'descricao'
+  },
+  editora: {
+    titulo: 'Adicionar editora',
+    campo: 'nome'
+  },
+  autor: {
+    titulo: 'Adicionar autor',
+    campo: 'nome'
+  }
+}
 
 function voltarInicio() {
   if (authStore.isAdmin) {
@@ -105,6 +124,91 @@ async function carregarOpcoes() {
       'Erro ao carregar autores, editoras ou categorias.',
       'error'
     )
+  }
+}
+
+function abrirModalCadastro(tipo) {
+  tipoCadastro.value = tipo
+  nomeNovoCadastro.value = ''
+  mostrarModalCadastro.value = true
+  mostrarAutores.value = false
+}
+
+function fecharModalCadastro() {
+  mostrarModalCadastro.value = false
+  nomeNovoCadastro.value = ''
+}
+
+async function salvarCadastroRapido() {
+  const tipo = tipoCadastro.value
+  const configuracao = tiposCadastro[tipo]
+  const nome = nomeNovoCadastro.value.trim()
+
+  if (!configuracao || !nome) {
+    toast.showToast('Informe o nome antes de salvar.', 'error')
+    return
+  }
+
+  if (salvandoCadastro.value) return
+
+  salvandoCadastro.value = true
+
+  try {
+    const dados = {
+      [configuracao.campo]: nome
+    }
+
+    let novoRegistro
+
+    if (tipo === 'categoria') {
+      novoRegistro = await categoriaApi.adicionarCategoria(dados)
+    } else if (tipo === 'editora') {
+      novoRegistro = await editoraApi.adicionarEditora(dados)
+    } else if (tipo === 'autor') {
+      novoRegistro = await autorApi.adicionarAutor(dados)
+    } else {
+      throw new Error('Tipo de cadastro inválido.')
+    }
+
+    if (!novoRegistro?.id) {
+      throw new Error('A API não retornou o registro criado com seu ID.')
+    }
+
+    if (tipo === 'categoria') {
+      categorias.value.push(novoRegistro)
+      livro.categoria = novoRegistro.id
+    } else if (tipo === 'editora') {
+      editoras.value.push(novoRegistro)
+      livro.editora = novoRegistro.id
+    } else {
+      autores.value.push(novoRegistro)
+
+      if (!livro.autores.includes(novoRegistro.id)) {
+        livro.autores.push(novoRegistro.id)
+      }
+    }
+
+    fecharModalCadastro()
+
+    toast.showToast(
+      `${configuracao.titulo.replace('Adicionar ', '')} cadastrada com sucesso!`
+    )
+  } catch (error) {
+    console.error(
+      'Erro ao cadastrar opção:',
+      error.response?.data || error
+    )
+
+    const mensagem =
+      error.response?.data?.detail ||
+      error.response?.data?.descricao?.[0] ||
+      error.response?.data?.nome?.[0] ||
+      error.message ||
+      'Não foi possível cadastrar.'
+
+    toast.showToast(mensagem, 'error')
+  } finally {
+    salvandoCadastro.value = false
   }
 }
 
@@ -349,23 +453,109 @@ function editar(l) {
       </div>
 
       <div class="form-group">
+        <label class="label" for="livro-formato">Formato:</label>
+        <select id="livro-formato" v-model="livro.formato" class="input-formato">
+          <option v-for="formato in formatos" :key="formato" :value="formato">
+            {{ formato }}
+          </option>
+        </select>
+      </div>
 
+      <div class="form-group">
+        <label class="label">Autores</label>
+
+        <div class="campo-com-adicionar">
+          <div class="autores-dropdown">
+            <button type="button" class="autores-select" @click="mostrarAutores = !mostrarAutores">
+              <span v-if="!livro.autores.length">
+                Selecione os autores
+              </span>
+
+              <span v-else>
+                {{ livro.autores.length }} autor(es) selecionado(s)
+              </span>
+
+              <span style="margin-left: 6px;">▾</span>
+            </button>
+
+            <div v-if="mostrarAutores" class="autores-lista">
+              <label v-for="autor in autores" :key="autor.id" class="autor-option">
+                <input type="checkbox" :value="autor.id" v-model="livro.autores" />
+
+                <span>{{ autor.nome }}</span>
+              </label>
+            </div>
+          </div>
+
+          <button type="button" class="btn-adicionar-opcao" title="Adicionar autor" aria-label="Adicionar autor"
+            @click="abrirModalCadastro('autor')">
+            +
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="label" for="livro-editora">
+          Editora
+        </label>
+
+        <div class="campo-com-adicionar">
+          <select id="livro-editora" class="input-editora" v-model="livro.editora">
+            <option value="" disabled>
+              Selecione uma editora
+            </option>
+
+            <option v-for="editora in editoras" :key="editora.id" :value="editora.id">
+              {{ editora.nome }}
+            </option>
+          </select>
+
+          <button type="button" class="btn-adicionar-opcao" title="Adicionar editora" aria-label="Adicionar editora"
+            @click="abrirModalCadastro('editora')">
+            +
+          </button>
+        </div>
+      </div>
+
+      <div class="form-group">
         <label class="label" for="livro-categoria">
           Categoria
         </label>
 
-        <select id="livro-categoria" class="input-categoria" v-model="livro.categoria">
+        <div class="campo-com-adicionar">
+          <select id="livro-categoria" class="input-categoria" v-model="livro.categoria">
+            <option value="" disabled>
+              Selecione uma categoria
+            </option>
 
-          <option value="" disabled>
-            Selecione uma categoria
-          </option>
+            <option v-for="categoria in categorias" :key="categoria.id" :value="categoria.id">
+              {{ categoria.descricao }}
+            </option>
+          </select>
 
-          <option v-for="categoria in categorias" :key="categoria.id" :value="categoria.id">
-            {{ categoria.descricao }}
-          </option>
+          <button type="button" class="btn-adicionar-opcao" title="Adicionar categoria" aria-label="Adicionar categoria"
+            @click="abrirModalCadastro('categoria')">
+            +
+          </button>
+        </div>
+      </div>
 
-        </select>
+      <div class="form-group">
+        <label class="label" for="livro-quantidade">
+          Quantidade
+        </label>
 
+        <input class="input-quantidade" id="livro-quantidade" type="number" min="0" step="1"
+          v-model.number="livro.quantidade" />
+      </div>
+
+      <div class="form-group">
+        <label class="label" for="livro-sinopse">
+          Sinopse
+        </label>
+
+        <textarea class="input-sinopse" id="livro-sinopse" v-model="livro.sinopse"
+          placeholder="Digite a sinopse do livro..." rows="4"></textarea>
       </div>
 
       <div class="form-group">
@@ -385,78 +575,6 @@ function editar(l) {
 
       </div>
 
-      <div class="form-group">
-        <label class="label">Autores</label>
-
-        <div class="autores-dropdown">
-          <button type="button" class="autores-select" @click="mostrarAutores = !mostrarAutores">
-            <span v-if="!livro.autores.length">
-              Selecione os autores</span>
-
-            <span v-else>
-              {{ livro.autores.length }} autor(es) selecionado(s)
-            </span>
-
-            <span style="margin-left: 6px;">▾</span>
-          </button>
-
-          <div v-if="mostrarAutores" class="autores-lista">
-            <label v-for="autor in autores" :key="autor.id" class="autor-option">
-              <input type="checkbox" :value="autor.id" v-model="livro.autores" />
-
-              <span>{{ autor.nome }}</span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-group">
-
-        <label class="label" for="livro-editora">
-          Editora
-        </label>
-
-        <select id="livro-editora" class="input-editora" v-model="livro.editora">
-
-          <option value="" disabled>
-            Selecione uma editora
-          </option>
-
-          <option v-for="editora in editoras" :key="editora.id" :value="editora.id">
-            {{ editora.nome }}
-          </option>
-
-        </select>
-
-      </div>
-
-      <div class="form-group">
-        <label class="label" for="livro-quantidade">
-          Quantidade
-        </label>
-
-        <input class="input-quantidade" id="livro-quantidade" type="number" min="0" step="1"
-          v-model.number="livro.quantidade" />
-      </div>
-
-      <div class="form-group">
-        <label class="label" for="livro-formato">Formato:</label>
-        <select id="livro-formato" v-model="livro.formato" class="input-formato">
-          <option v-for="formato in formatos" :key="formato" :value="formato">
-            {{ formato }}
-          </option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <label class="label" for="livro-sinopse">
-          Sinopse
-        </label>
-
-        <textarea class="input-sinopse" id="livro-sinopse" v-model="livro.sinopse"
-          placeholder="Digite a sinopse do livro..." rows="4"></textarea>
-      </div>
-
       <button class="btn" @click="salvar">
         {{ livro.id ? 'Atualizar' : 'Salvar' }}
       </button>
@@ -465,6 +583,37 @@ function editar(l) {
         Limpar
       </button>
 
+    </div>
+
+    <div v-if="mostrarModalCadastro" class="modal-overlay" @click.self="fecharModalCadastro">
+      <div class="modal-cadastro" role="dialog" aria-modal="true" :aria-label="tiposCadastro[tipoCadastro]?.titulo">
+        <div class="modal-cadastro-header">
+          <h2>{{ tiposCadastro[tipoCadastro]?.titulo }}</h2>
+
+          <button type="button" class="modal-fechar" title="Fechar" @click="fecharModalCadastro">
+            &times;
+          </button>
+        </div>
+
+        <form @submit.prevent="salvarCadastroRapido">
+          <label for="novo-cadastro-nome">
+            Nome
+          </label>
+
+          <input id="novo-cadastro-nome" v-model="nomeNovoCadastro" type="text" maxlength="255" required autofocus
+            placeholder="Digite o nome" />
+
+          <div class="modal-cadastro-acoes">
+            <button type="button" class="btn btn-outline" :disabled="salvandoCadastro" @click="fecharModalCadastro">
+              Cancelar
+            </button>
+
+            <button type="submit" class="btn-adicionar-opcao btn-salvar-modal" :disabled="salvandoCadastro">
+              {{ salvandoCadastro ? 'Salvando...' : 'Salvar' }}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
 
     <div class="search-wrapper">
@@ -535,6 +684,134 @@ function editar(l) {
 </template>
 
 <style scoped>
+/* Campo de seleção com botão + */
+.campo-com-adicionar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+}
+
+.campo-com-adicionar>select {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+}
+
+.campo-com-adicionar .autores-dropdown {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Botão verde no estilo da imagem */
+.btn-adicionar-opcao {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 30px;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  border-radius: 4px;
+  background: transparent;
+  color: #35ad45;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.btn-adicionar-opcao:hover {
+  background-color: rgba(53, 173, 69, 0.12);
+  color: #49d15b;
+}
+
+.btn-adicionar-opcao:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Janela modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.65);
+}
+
+.modal-cadastro {
+  width: 100%;
+  max-width: 420px;
+  padding: 22px;
+  border: 1px solid var(--secondary);
+  border-radius: 10px;
+  background: var(--background);
+  color: var(--text);
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+}
+
+.modal-cadastro-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.modal-cadastro-header h2 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.modal-fechar {
+  border: none;
+  background: transparent;
+  color: var(--text);
+  font-size: 28px;
+  cursor: pointer;
+}
+
+.modal-cadastro form>label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.modal-cadastro form>input {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid var(--secondary);
+  border-radius: 6px;
+  background: var(--background);
+  color: var(--text);
+  font: inherit;
+}
+
+.modal-cadastro-acoes {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.btn-salvar-modal {
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 85px;
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 6px;
+  background: #35ad45;
+  color: #fff;
+  font-size: 14px;
+}
 
 .page-header {
   display: flex;

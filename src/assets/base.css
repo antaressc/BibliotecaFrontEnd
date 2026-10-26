@@ -1,4 +1,3 @@
-/* Design tokens — inspired by shadcn/ui (zinc palette) */
 :root,
 [data-theme="light"] {
   --background: #fafafa;

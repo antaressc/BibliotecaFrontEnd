@@ -199,7 +199,7 @@ function fecharPopup() {
           <img :src="capUrl(livro)" alt="Capa" class="livro-capa" />
 
           <div>
-            <strong>{{ livro.titulo }}</strong>
+            <strong class="titulo">{{ livro.titulo }}</strong>
             <span class="quantidade-livro" :class="{ esgotado: livro.quantidade === 0 }">
               {{ livro.quantidade > 0
                 ? `${livro.quantidade} disponíveis`
@@ -276,6 +276,10 @@ function fecharPopup() {
 </template>
 
 <style scoped>
+.titulo{
+  font-size: large;
+}
+
 .list-item {
   padding-left: 2%;
   padding-right: 2%;

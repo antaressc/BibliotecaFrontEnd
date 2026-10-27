@@ -73,13 +73,6 @@ function abrirModal() {
   showModal.value = true;
 }
 
-function limitarTitulo(titulo) {
-  if (!titulo) return "";
-  return titulo.length > 90
-    ? titulo.substring(0, 90) + "..."
-    : titulo;
-}
-
 async function reservarLivro(livroId) {
   try {
     await reservaStore.criarReserva(livroId)
@@ -202,7 +195,7 @@ function fecharPopup() {
           <img :src="capUrl(livro)" alt="Capa" class="livro-capa" />
 
           <div>
-            <strong class="titulo">{{ limitarTitulo(livro.titulo) }}</strong>
+            <strong class="titulo">{{ livro.titulo }}</strong>
             <span class="quantidade-livro" :class="{ esgotado: livro.quantidade === 0 }">
               {{ livro.quantidade > 0
                 ? `${livro.quantidade} disponíveis`
@@ -288,6 +281,15 @@ function fecharPopup() {
 </template>
 
 <style scoped>
+.titulo-card {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+}
+
 .list-item {
   padding-left: 2%;
   padding-right: 2%;

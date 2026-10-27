@@ -595,8 +595,8 @@ function fecharPopup() {
   }
 
   .livro-capa {
-    width: 76px;
-    height: 110px;
+    width: 84px;
+    height: 130px;
     flex-shrink: 0;
   }
 

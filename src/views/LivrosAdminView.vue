@@ -350,6 +350,9 @@ async function salvar() {
 
     delete dadosLivro.capa
 
+    if (!dadosLivro.capa_attachment_key && !capaArquivo.value) {
+      delete dadosLivro.capa_attachment_key
+    }
 
     await livroStore.salvarLivro(
       dadosLivro
@@ -390,31 +393,65 @@ async function salvar() {
   }
 }
 
-function editar(l) {
-  Object.assign(livro, {
-    ...defaultLivro,
-    ...l,
-    autores: Array.isArray(l.autores)
-      ? l.autores.map(autor =>
-        typeof autor === 'object'
-          ? autor.id
-          : autor
-      )
-      : []
-  })
 
-  capaArquivo.value = null
-  capaPreview.value = capaUrl(l.capa)
-  livro.capa_attachment_key = ''
+async function editar(l) {
+  try {
+    const dados = await livrosApi.buscarLivro(l.id)
 
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  })
+    const obterId = (valor) => {
+      if (valor == null) return ''
+      if (typeof valor === 'object') return valor.id ?? ''
+      return valor
+    }
+
+    Object.assign(livro, {
+      ...defaultLivro,
+      ...dados,
+
+      id: dados.id,
+      titulo: dados.titulo ?? '',
+      isbn: dados.isbn ?? '',
+      formato: dados.formato ?? '',
+      sinopse: dados.sinopse ?? '',
+      quantidade: dados.quantidade ?? 1,
+
+      autores: Array.isArray(dados.autores)
+        ? dados.autores.map(autor => obterId(autor))
+        : [],
+
+      editora: obterId(dados.editora),
+      categoria: obterId(dados.categoria),
+
+      capa_attachment_key:
+        dados.capa_attachment_key ?? ''
+    })
+
+    capaArquivo.value = null
+    capaPreview.value = capaUrl(dados.capa)
+
+    const input = document.getElementById('livro-capa')
+    if (input) input.value = ''
+
+    mostrarAutores.value = false
+
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  } catch (error) {
+    console.error(
+      'Erro ao carregar dados do livro:',
+      error.response?.data || error
+    )
+
+    toast.showToast(
+      'Não foi possível carregar os dados completos do livro.',
+      'error'
+    )
+  }
 }
 
 </script>
-
 
 <template>
 

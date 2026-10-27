@@ -176,11 +176,7 @@ function fecharPopup() {
 
       <select v-model="formato" @change="aplicarFiltros" class="filtro-select">
         <option value="">Todos os formatos</option>
-        <option
-          v-for="fmt in livroStore.formatos"
-          :key="fmt.valor"
-          :value="fmt.valor"
-        >
+        <option v-for="fmt in livroStore.formatos" :key="fmt.valor" :value="fmt.valor">
           {{ fmt.descricao }}
         </option>
       </select>
@@ -206,7 +202,16 @@ function fecharPopup() {
                 : 'Indisponível'
               }}
             </span>
-            <button v-if="livro.sinopse" class="btn-sinopse" @click.stop="abrirSinopse(livro)">Ver sinopse</button>
+
+            <div class="livro-botoes-mobile">
+              <button class="btn btn-reservar btn-sm" @click.stop="reservarLivro(livro.id)" title="Reservar livro">
+                Reservar
+              </button>
+
+              <button v-if="livro.sinopse" class="btn-sinopse" @click.stop="abrirSinopse(livro)">
+                Ver sinopse
+              </button>
+            </div>
           </div>
         </div>
         <div class="list-item-actions">
@@ -276,10 +281,6 @@ function fecharPopup() {
 </template>
 
 <style scoped>
-.titulo{
-  font-size: large;
-}
-
 .list-item {
   padding-left: 2%;
   padding-right: 2%;
@@ -569,5 +570,89 @@ function fecharPopup() {
 
 .search-input {
   border-color: black;
+}
+
+/* No computador, mantém os botões nas posições atuais */
+.livro-botoes-mobile {
+  display: none;
+}
+
+
+@media (max-width: 640px) {
+  .list-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    overflow: hidden;
+  }
+
+  .livro-info {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    gap: 8px;
+    align-items: center;
+  }
+
+  .livro-capa {
+    width: 76px;
+    height: 110px;
+    flex-shrink: 0;
+  }
+
+  .livro-info > div {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+    align-items: flex-start;
+  }
+
+  .titulo {
+    font-size: 10px;
+    overflow-wrap: anywhere;
+  }
+
+  .quantidade-livro {
+    font-size: 12px;
+    margin-top: 4px;
+  }
+
+  .livro-botoes-mobile {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 6px;
+    width: 100%;
+    margin-top: 8px;
+  }
+
+  .livro-botoes-mobile > button {
+    flex: 1 1 0;
+    min-width: 0;
+    width: auto;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 7px 3px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .list-item-actions {
+    display: none;
+  }
+
+  .btn-sinopse {
+    margin-top: 0;
+  }
+
+  .filtros-livros {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filtro-select {
+    width: 100%;
+  }
 }
 </style>

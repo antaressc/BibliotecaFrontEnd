@@ -181,6 +181,7 @@ textarea { resize: vertical; min-height: 60px; }
   .col-2, .col-4, .col-6, .col-8, .col-10, .col-12 { width: 100%; }
   .modal-content { width: 95%; padding: 16px; }
   .nav-link { padding: 4px 8px; font-size: 0.8rem; }
+  .titulo {font-size: 0.7rem;}
 }
 
 html {

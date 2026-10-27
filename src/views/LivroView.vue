@@ -617,11 +617,6 @@ function fecharPopup() {
     align-items: flex-start;
   }
 
-  .titulo {
-    font-size: 10px;
-    overflow-wrap: anywhere;
-  }
-
   .quantidade-livro {
     font-size: 12px;
     margin-top: 4px;

@@ -73,6 +73,13 @@ function abrirModal() {
   showModal.value = true;
 }
 
+function limitarTitulo(titulo) {
+  if (!titulo) return "";
+  return titulo.length > 90
+    ? titulo.substring(0, 90) + "..."
+    : titulo;
+}
+
 async function reservarLivro(livroId) {
   try {
     await reservaStore.criarReserva(livroId)
@@ -195,7 +202,7 @@ function fecharPopup() {
           <img :src="capUrl(livro)" alt="Capa" class="livro-capa" />
 
           <div>
-            <strong class="titulo">{{ livro.titulo }}</strong>
+            <strong class="titulo">{{ limitarTitulo(livro.titulo) }}</strong>
             <span class="quantidade-livro" :class="{ esgotado: livro.quantidade === 0 }">
               {{ livro.quantidade > 0
                 ? `${livro.quantidade} disponíveis`

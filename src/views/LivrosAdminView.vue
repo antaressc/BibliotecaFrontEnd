@@ -95,8 +95,23 @@ async function carregarOpcoes() {
     autores.value =
       autoresData.results || autoresData
 
-    editoras.value =
-      editorasData.results || editorasData
+
+    const editorasCarregadas = [
+      ...(editorasData.results || editorasData)
+    ]
+
+    const totalPaginasEditoras = editorasData.total_pages || 1
+
+    for (let pagina = 2; pagina <= totalPaginasEditoras; pagina++) {
+      const resposta = await editoraApi.buscarTodasAsEditoras(pagina)
+
+      editorasCarregadas.push(
+        ...(resposta.results || resposta)
+      )
+    }
+
+    editoras.value = editorasCarregadas
+
 
     const categoriasCarregadas = [
       ...(categoriasData.results || categoriasData)
@@ -392,7 +407,6 @@ async function salvar() {
     )
   }
 }
-
 
 async function editar(l) {
   try {

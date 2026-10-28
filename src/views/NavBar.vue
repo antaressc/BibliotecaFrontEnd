@@ -63,172 +63,8 @@ onUnmounted(() => {
 <template>
   <header class="navbar">
     <nav>
-      <div class="nav-left">
-        <img src="../assets/logo.png" class="logo-nav" alt="Logo Antares" />
-
-        <router-link
-          v-if="isSuperuser"
-          :to="{ name: 'admin' }"
-          class="nav-title"
-        >
-          Biblioteca Antares
-        </router-link>
-
-        <router-link
-          v-else
-          :to="{ name: 'livros' }"
-          class="nav-title"
-        >
-          Biblioteca Antares
-        </router-link>
-      </div>
-
-      <div class="nav-right">
-        <!-- Ações normais do desktop -->
-        <div v-if="isLoggedIn" class="desktop-actions">
-          <button
-            class="nav-link theme-toggle"
-            @click="toggleTheme"
-            :title="currentTheme === 'light' ? 'Modo escuro' : 'Modo claro'"
-            :aria-label="currentTheme === 'light' ? 'Ativar modo escuro' : 'Ativar modo claro'"
-          >
-            <svg
-              v-if="currentTheme === 'light'"
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <circle cx="12" cy="12" r="5" />
-              <line x1="12" y1="1" x2="12" y2="3" />
-              <line x1="12" y1="21" x2="12" y2="23" />
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-              <line x1="1" y1="12" x2="3" y2="12" />
-              <line x1="21" y1="12" x2="23" y2="12" />
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-            </svg>
-
-            <svg
-              v-else
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-            </svg>
-          </button>
-
-          <router-link
-            v-if="!isSuperuser"
-            :to="{ name: 'reservas' }"
-            class="nav-link"
-          >
-            Minhas<br />Reservas
-          </router-link>
-        </div>
-
-        <div v-else class="desktop-actions">
-          <button
-            class="nav-link theme-toggle"
-            @click="toggleTheme"
-            :title="currentTheme === 'light' ? 'Modo escuro' : 'Modo claro'"
-            :aria-label="currentTheme === 'light' ? 'Ativar modo escuro' : 'Ativar modo claro'"
-          >
-            <svg
-              v-if="currentTheme === 'light'"
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <circle cx="12" cy="12" r="5" />
-              <line x1="12" y1="1" x2="12" y2="3" />
-              <line x1="12" y1="21" x2="12" y2="23" />
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-              <line x1="1" y1="12" x2="3" y2="12" />
-              <line x1="21" y1="12" x2="23" y2="12" />
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-            </svg>
-
-            <svg
-              v-else
-              xmlns="http://www.w3.org/2000/svg"
-              width="18"
-              height="18"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            >
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-            </svg>
-          </button>
-
-          <router-link :to="{ name: 'login' }" class="nav-link">
-            Login
-          </router-link>
-        </div>
-
-        <!-- Menu do perfil -->
-        <div v-if="isLoggedIn" class="user-menu">
-          <button
-            type="button"
-            class="user-menu-button"
-            @click.stop="toggleDropdown"
-            aria-label="Abrir menu do usuário"
-            :aria-expanded="showDropdown"
-          >
-            <img
-              :src="user?.foto?.url || user?.foto || 'https://placehold.co/36'"
-              alt="Foto do usuário"
-              class="user-photo"
-            />
-          </button>
-
-          <div v-if="showDropdown" class="dropdown">
-            <p class="dropdown-name">{{ user?.name }}</p>
-            <p class="dropdown-email">{{ user?.email }}</p>
-
-            <router-link
-              :to="{ name: 'usuario' }"
-              class="dropdown-item"
-              @click="closeMobileMenu"
-            >
-              Perfil
-            </router-link>
-
-            <router-link
-              :to="{ name: 'logout' }"
-              class="dropdown-item"
-              @click="closeMobileMenu"
-            >
-              Sair
-            </router-link>
-          </div>
-        </div>
-
+      <!-- ESQUERDA: botão do menu no celular -->
+      <div class="nav-mobile-left">
         <div class="mobile-menu-container">
           <button
             type="button"
@@ -287,46 +123,108 @@ onUnmounted(() => {
               class="mobile-dropdown-item"
               @click="toggleTheme"
             >
-              <span>{{ currentTheme === "light" ? "Modo escuro" : "Modo claro" }}</span>
+              <span>
+                {{ currentTheme === "light" ? "Modo escuro" : "Modo claro" }}
+              </span>
 
-              <svg
-                v-if="currentTheme === 'light'"
-                xmlns="http://www.w3.org/2000/svg"
-                width="19"
-                height="19"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-              </svg>
-
-              <svg
-                v-else
-                xmlns="http://www.w3.org/2000/svg"
-                width="19"
-                height="19"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              >
-                <circle cx="12" cy="12" r="5" />
-                <line x1="12" y1="1" x2="12" y2="3" />
-                <line x1="12" y1="21" x2="12" y2="23" />
-                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                <line x1="1" y1="12" x2="3" y2="12" />
-                <line x1="21" y1="12" x2="23" y2="12" />
-                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-              </svg>
+              <span aria-hidden="true">
+                {{ currentTheme === "light" ? "☾" : "☀" }}
+              </span>
             </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CENTRO: logo e título -->
+      <div class="nav-brand">
+        <img
+          src="../assets/logo.png"
+          class="logo-nav"
+          alt="Logo Antares"
+        />
+
+        <router-link
+          v-if="isSuperuser"
+          :to="{ name: 'admin' }"
+          class="nav-title"
+        >
+          Biblioteca Antares
+        </router-link>
+
+        <router-link
+          v-else
+          :to="{ name: 'livros' }"
+          class="nav-title"
+        >
+          Biblioteca Antares
+        </router-link>
+      </div>
+
+      <!-- DIREITA: ações do desktop e perfil -->
+      <div class="nav-right">
+        <div class="desktop-actions">
+          <button
+            class="nav-link theme-toggle"
+            @click="toggleTheme"
+            :title="currentTheme === 'light' ? 'Modo escuro' : 'Modo claro'"
+            :aria-label="currentTheme === 'light' ? 'Ativar modo escuro' : 'Ativar modo claro'"
+          >
+            <span aria-hidden="true">
+              {{ currentTheme === "light" ? "☾" : "☀" }}
+            </span>
+          </button>
+
+          <router-link
+            v-if="isLoggedIn && !isSuperuser"
+            :to="{ name: 'reservas' }"
+            class="nav-link"
+          >
+            Minhas Reservas
+          </router-link>
+
+          <router-link
+            v-if="!isLoggedIn"
+            :to="{ name: 'login' }"
+            class="nav-link"
+          >
+            Login
+          </router-link>
+        </div>
+
+        <div v-if="isLoggedIn" class="user-menu">
+          <button
+            type="button"
+            class="user-menu-button"
+            @click.stop="toggleDropdown"
+            aria-label="Abrir menu do usuário"
+            :aria-expanded="showDropdown"
+          >
+            <img
+              :src="user?.foto?.url || user?.foto || 'https://placehold.co/36'"
+              alt="Foto do usuário"
+              class="user-photo"
+            />
+          </button>
+
+          <div v-if="showDropdown" class="dropdown">
+            <p class="dropdown-name">{{ user?.name }}</p>
+            <p class="dropdown-email">{{ user?.email }}</p>
+
+            <router-link
+              :to="{ name: 'usuario' }"
+              class="dropdown-item"
+              @click="closeMobileMenu"
+            >
+              Perfil
+            </router-link>
+
+            <router-link
+              :to="{ name: 'logout' }"
+              class="dropdown-item"
+              @click="closeMobileMenu"
+            >
+              Sair
+            </router-link>
           </div>
         </div>
       </div>
@@ -335,6 +233,32 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+
+.nav-brand {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-width: 0;
+}
+
+.nav-brand .logo-nav {
+  display: block;
+  width: 28px;
+  max-width: 28px;
+  height: auto;
+  flex-shrink: 0;
+}
+
+.nav-brand .nav-title {
+  display: block;
+  margin: 0;
+  line-height: 1;
+  white-space: nowrap;
+  margin-left: 3px;
+}
+
 .user-menu {
   position: relative;
   cursor: pointer;
@@ -470,9 +394,13 @@ onUnmounted(() => {
 
 .mobile-dropdown {
   position: absolute;
-  top: calc(100% + 10px);
-  right: 0;
-  min-width: 210px;
+  top: calc(100% + 8px);
+  left: 0;
+  right: auto;
+  width: 220px;
+  min-width: 220px;
+  max-width: calc(100vw - 24px);
+  box-sizing: border-box;
   padding: 8px;
   background: var(--card);
   color: var(--card-foreground);
@@ -480,6 +408,11 @@ onUnmounted(() => {
   border-radius: var(--radius);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
   z-index: 120;
+}
+
+.nav-mobile-left,
+.mobile-menu-container {
+  overflow: visible;
 }
 
 .mobile-dropdown-item {

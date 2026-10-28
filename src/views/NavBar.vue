@@ -233,14 +233,32 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
+.navbar nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px 16px;
+}
+
+.nav-mobile-left {
+  display: none;
+}
 
 .nav-brand {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 5px;
   min-width: 0;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .nav-brand .logo-nav {
@@ -465,6 +483,32 @@ onUnmounted(() => {
     display: flex;
     align-items: center;
     gap: 10px;
+  }
+
+  .navbar nav {
+    position: relative;
+    justify-content: space-between;
+  }
+  
+  .nav-mobile-left {
+    display: flex;
+    align-items: center;
+    flex: 1;
+  }
+  
+  .nav-brand {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: calc(100% - 120px);
+  }
+  
+  .nav-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex: 1;
+    margin-left: auto;
   }
 }
 

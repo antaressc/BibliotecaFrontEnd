@@ -107,6 +107,19 @@ export const useLivroStore = defineStore('livro', () => {
     )
   }
 
+  async function irParaPagina(pagina) {
+    if (pagina < 1 || pagina > meta.value.total_pages) {
+      return
+    }
+
+    await getLivros(
+      pagina,
+      currentSearch.value,
+      currentAutor.value,
+      currentCategoria.value
+    )
+  }
+
   return {
     livros,
     loading,
@@ -122,6 +135,7 @@ export const useLivroStore = defineStore('livro', () => {
     excluirLivro,
     proximaPagina,
     paginaAnterior,
+    irParaPagina,
     formatos,
     getFormatos,
   }

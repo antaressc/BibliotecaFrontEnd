@@ -139,6 +139,13 @@ function fecharPopup() {
   popup.value.aberto = false
 }
 
+async function irParaPagina(pagina) {
+  if (pagina < 1 || pagina > meta.value.total_pages) return;
+
+  meta.value.page = pagina;
+  await buscarLivros(pagina);
+}
+
 </script>
 
 <template>
@@ -225,13 +232,33 @@ function fecharPopup() {
       </li>
     </ul>
 
+
     <div class="paginator">
-      <button class="btn btn-outline btn-sm" :disabled="livroStore.meta.page == 1"
-        @click="livroStore.paginaAnterior">Anterior</button>
+      <button v-if="livroStore.meta.page > 1" class="btn btn-outline btn-sm" title="Primeira página"
+        aria-label="Primeira página" @click="livroStore.irParaPagina(1)">
+        «
+      </button>
+
+      <button class="btn btn-outline btn-sm" :disabled="livroStore.meta.page == 1" title="Página anterior"
+        aria-label="Página anterior" @click="livroStore.paginaAnterior">
+        ‹
+      </button>
+
+      <span>
+        Página {{ livroStore.meta.page }} de {{ livroStore.meta.total_pages }}
+      </span>
+
       <button class="btn btn-outline btn-sm" :disabled="livroStore.meta.page == livroStore.meta.total_pages"
-        @click="livroStore.proximaPagina">Próxima</button>
-      <span>Página {{ livroStore.meta.page }} de {{ livroStore.meta.total_pages }}</span>
+        title="Próxima página" aria-label="Próxima página" @click="livroStore.proximaPagina">
+        ›
+      </button>
+
+      <button v-if="livroStore.meta.page < livroStore.meta.total_pages" class="btn btn-outline btn-sm"
+        title="Última página" aria-label="Última página" @click="livroStore.irParaPagina(livroStore.meta.total_pages)">
+        »
+      </button>
     </div>
+
   </div>
 
   <div v-if="livroSinopse" class="sinopse-overlay" @click.self="fecharSinopse">
@@ -590,8 +617,8 @@ function fecharPopup() {
   margin-top: 12px;
 }
 
-.livro-botoes-mobile > .btn-reservar,
-.livro-botoes-mobile > .btn-sinopse {
+.livro-botoes-mobile>.btn-reservar,
+.livro-botoes-mobile>.btn-sinopse {
   display: inline-flex;
   flex: 0 0 auto;
   width: auto;
@@ -601,7 +628,7 @@ function fecharPopup() {
   white-space: nowrap;
 }
 
-.livro-botoes-mobile > .btn-sinopse {
+.livro-botoes-mobile>.btn-sinopse {
   margin-top: 0;
 }
 
@@ -627,7 +654,7 @@ function fecharPopup() {
     flex-shrink: 0;
   }
 
-  .livro-info > div {
+  .livro-info>div {
     display: flex;
     flex-direction: column;
     flex: 1;
@@ -641,7 +668,7 @@ function fecharPopup() {
   }
 
   /* Botões lado a lado no celular */
-  .livro-info > div .livro-botoes-mobile {
+  .livro-info>div .livro-botoes-mobile {
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
@@ -652,8 +679,8 @@ function fecharPopup() {
     margin-top: 12px !important;
   }
 
-  .livro-info > div .livro-botoes-mobile > .btn-reservar,
-  .livro-info > div .livro-botoes-mobile > .btn-sinopse {
+  .livro-info>div .livro-botoes-mobile>.btn-reservar,
+  .livro-info>div .livro-botoes-mobile>.btn-sinopse {
     display: inline-flex !important;
     flex: 0 0 100px !important;
     width: 100px !important;
@@ -668,11 +695,11 @@ function fecharPopup() {
     font-size: 12px !important;
   }
 
-  .livro-info > div .livro-botoes-mobile > .btn-reservar {
+  .livro-info>div .livro-botoes-mobile>.btn-reservar {
     order: 1;
   }
 
-  .livro-info > div .livro-botoes-mobile > .btn-sinopse {
+  .livro-info>div .livro-botoes-mobile>.btn-sinopse {
     order: 2;
   }
 
@@ -696,13 +723,13 @@ function fecharPopup() {
     min-width: 0;
   }
 
-  .livro-info > div {
+  .livro-info>div {
     flex: 1;
     min-width: 0;
     align-items: flex-start;
   }
 
-  .livro-info > div .livro-botoes-mobile {
+  .livro-info>div .livro-botoes-mobile {
     display: flex !important;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
@@ -713,8 +740,8 @@ function fecharPopup() {
     margin-top: 12px !important;
   }
 
-  .livro-info > div .livro-botoes-mobile > .btn-reservar,
-  .livro-info > div .livro-botoes-mobile > .btn-sinopse {
+  .livro-info>div .livro-botoes-mobile>.btn-reservar,
+  .livro-info>div .livro-botoes-mobile>.btn-sinopse {
     display: inline-flex !important;
     flex: 0 0 auto !important;
     width: auto !important;
@@ -724,8 +751,8 @@ function fecharPopup() {
     white-space: nowrap !important;
   }
 
-  .livro-info > div .livro-botoes-mobile > .btn-reservar,
-  .livro-info > div .livro-botoes-mobile > .btn-sinopse {
+  .livro-info>div .livro-botoes-mobile>.btn-reservar,
+  .livro-info>div .livro-botoes-mobile>.btn-sinopse {
     width: 100px !important;
     min-width: 100px !important;
     max-width: 100px !important;

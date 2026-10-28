@@ -215,8 +215,6 @@ function fecharPopup() {
           </div>
         </div>
         <div class="list-item-actions">
-          <button class="btn btn-reservar btn-sm" @click="reservarLivro(livro.id)"
-            title="Reservar livro">Reservar</button>
           <button v-if="canManage" class="btn btn-destructive btn-sm btn-icon-sm" @click="excluir(livro.id)"
             title="Excluir"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
               fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -279,7 +277,6 @@ function fecharPopup() {
     </div>
   </div>
 </template>
-
 <style scoped>
 .titulo {
   display: -webkit-box;
@@ -583,9 +580,30 @@ function fecharPopup() {
 
 /* No computador, mantém os botões nas posições atuais */
 .livro-botoes-mobile {
-  display: none;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  width: 100%;
+  margin-top: 12px;
 }
 
+.livro-botoes-mobile > .btn-reservar,
+.livro-botoes-mobile > .btn-sinopse {
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 0;
+  margin: 0;
+  box-sizing: border-box;
+  white-space: nowrap;
+}
+
+.livro-botoes-mobile > .btn-sinopse {
+  margin-top: 0;
+}
 
 @media (max-width: 640px) {
   .list-item {
@@ -622,32 +640,44 @@ function fecharPopup() {
     margin-top: 4px;
   }
 
-  .livro-botoes-mobile {
-    display: flex;
-    flex-direction: row;
-    align-items: stretch;
-    gap: 6px;
-    width: 100%;
-    margin-top: 8px;
+  /* Botões lado a lado no celular */
+  .livro-info > div .livro-botoes-mobile {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    margin-top: 12px !important;
   }
 
-  .livro-botoes-mobile > button {
-    flex: 1 1 0;
-    min-width: 0;
-    width: auto;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 7px 3px;
-    font-size: 11px;
-    white-space: nowrap;
+  .livro-info > div .livro-botoes-mobile > .btn-reservar,
+  .livro-info > div .livro-botoes-mobile > .btn-sinopse {
+    display: inline-flex !important;
+    flex: 0 0 100px !important;
+    width: 100px !important;
+    min-width: 100px !important;
+    max-width: 100px !important;
+    margin: 0 !important;
+    padding: 6px 4px !important;
+    box-sizing: border-box !important;
+    align-items: center !important;
+    justify-content: center !important;
+    white-space: nowrap !important;
+    font-size: 12px !important;
+  }
+
+  .livro-info > div .livro-botoes-mobile > .btn-reservar {
+    order: 1;
+  }
+
+  .livro-info > div .livro-botoes-mobile > .btn-sinopse {
+    order: 2;
   }
 
   .list-item-actions {
     display: none;
-  }
-
-  .btn-sinopse {
-    margin-top: 0;
   }
 
   .filtros-livros {
@@ -657,6 +687,59 @@ function fecharPopup() {
 
   .filtro-select {
     width: 100%;
+  }
+}
+
+@media (min-width: 641px) {
+  .livro-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .livro-info > div {
+    flex: 1;
+    min-width: 0;
+    align-items: flex-start;
+  }
+
+  .livro-info > div .livro-botoes-mobile {
+    display: flex !important;
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+    justify-content: flex-start !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: 100% !important;
+    margin-top: 12px !important;
+  }
+
+  .livro-info > div .livro-botoes-mobile > .btn-reservar,
+  .livro-info > div .livro-botoes-mobile > .btn-sinopse {
+    display: inline-flex !important;
+    flex: 0 0 auto !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    margin: 0 !important;
+    white-space: nowrap !important;
+  }
+
+  .livro-info > div .livro-botoes-mobile > .btn-reservar,
+  .livro-info > div .livro-botoes-mobile > .btn-sinopse {
+    width: 100px !important;
+    min-width: 100px !important;
+    max-width: 100px !important;
+    height: 30px !important;
+    min-height: 30px !important;
+    padding: 0 8px !important;
+    box-sizing: border-box !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    font-size: 12px !important;
+    line-height: 1 !important;
+    white-space: nowrap !important;
   }
 }
 </style>

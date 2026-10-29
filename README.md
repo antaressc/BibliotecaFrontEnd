@@ -1,35 +1,97 @@
-# .
+# 📚 Biblioteca Antares
 
-This template should help get you started developing with Vue 3 in Vite.
+Sistema web para gerenciamento da biblioteca corporativa da **Antares**, desenvolvido para facilitar o controle do acervo, usuários, reservas e empréstimos de livros.
 
-## Recommended IDE Setup
+## 🎯 Objetivo
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+Centralizar e organizar o gerenciamento da biblioteca da empresa, permitindo que colaboradores consultem e reservem livros, enquanto o **RH** administra o acervo, aprova os cadastros e controla as retiradas e devoluções.
 
-## Customize configuration
+## ✨ Funcionalidades
 
-See [Vite Configuration Reference](https://vitejs.dev/config/).
+### 👤 Colaboradores
 
-## Project Setup
+* Cadastro de novos usuários;
+* Acompanhamento da aprovação do cadastro;
+* Consulta do catálogo de livros;
+* Pesquisa por título, autor e categoria;
+* Reserva de livros disponíveis;
+* Consulta das próprias reservas;
+* Consulta dos empréstimos atuais;
+* Consulta do histórico de empréstimos.
 
-```sh
-npm install
-```
+### 🧑‍💼 RH
 
-### Compile and Hot-Reload for Development
+* Aprovação ou recusa de cadastros;
+* Consulta dos usuários cadastrados;
+* Cadastro de novos livros;
+* Edição das informações dos livros;
+* Controle da disponibilidade dos livros;
+* Visualização das reservas;
+* Registro da retirada dos livros;
+* Registro da devolução dos livros;
+* Consulta do histórico de empréstimos.
 
-```sh
-npm run dev
-```
+> **Importante:** livros e registros de empréstimos não são excluídos do sistema. Quando um livro deixa de fazer parte do acervo, sua disponibilidade pode ser alterada, preservando todo o histórico.
 
-### Compile and Minify for Production
+## 📖 Controle de empréstimos
 
-```sh
-npm run build
-```
+Cada empréstimo mantém o histórico das principais etapas:
 
-### Lint with [ESLint](https://eslint.org/)
+| Evento    | Informações registradas                |
+| --------- | -------------------------------------- |
+| Reserva   | Data e hora da reserva                 |
+| Retirada  | Data e hora da retirada e responsável  |
+| Devolução | Data e hora da devolução e responsável |
 
-```sh
-npm run lint
-```
+Dessa forma, é possível acompanhar todo o ciclo do livro, desde a reserva até sua devolução.
+
+## 🔐 Perfis e permissões
+
+| Ação                        | Colaborador |  RH |
+| --------------------------- | :---------: | :-: |
+| Criar cadastro              |      ✅      |  ✅  |
+| Aprovar usuário             |      ❌      |  ✅  |
+| Recusar usuário             |      ❌      |  ✅  |
+| Consultar livros            |      ✅      |  ✅  |
+| Reservar livro              |      ✅      |  ✅  |
+| Cadastrar livro             |      ❌      |  ✅  |
+| Editar livro                |      ❌      |  ✅  |
+| Excluir livro               |      ❌      |  ❌  |
+| Registrar retirada          |      ❌      |  ✅  |
+| Registrar devolução         |      ❌      |  ✅  |
+| Consultar próprio histórico |      ✅      |  ✅  |
+| Consultar histórico geral   |      ❌      |  ✅  |
+
+## 🛠️ Tecnologias
+
+* **Python**
+* **PDM**
+* **Banco de dados relacional**
+* **HTML5**
+
+## 🚧 Status do projeto
+
+> 🟡 **Em desenvolvimento**
+
+O sistema está sendo desenvolvido de forma incremental, começando pelas funcionalidades essenciais de usuários, livros, reservas e empréstimos.
+
+## 📌 Regras importantes
+
+* O cadastro de novos colaboradores depende de aprovação do RH.
+* Somente usuários aprovados podem utilizar o sistema.
+* O RH é responsável pelo gerenciamento do acervo.
+* O RH pode **inserir e editar livros**, mas não pode excluí-los.
+* Retiradas e devoluções são registradas pelo RH.
+* O histórico de reservas e empréstimos deve ser preservado.
+* A data e hora das reservas, retiradas e devoluções são registradas no sistema.
+
+## 👨‍🏫 Agradecimentos
+
+Agradeço aos professores **[@marrcandre](https://github.com/marrcandre)** e **[@eduardo-da-silva](https://github.com/eduardo-da-silva)**, que fizeram parte da minha formação e contribuíram para minha trajetória na área de tecnologia.
+
+O projeto utiliza como base o **template disponibilizado por [@marrcandre](https://github.com/marrcandre)** e teve como material de apoio os **vídeos e tutoriais disponibilizados por [@eduardo-da-silva](https://github.com/eduardo-da-silva)**.
+
+---
+
+**Biblioteca Antares**
+Sistema interno para gerenciamento do acervo e empréstimos da biblioteca corporativa.

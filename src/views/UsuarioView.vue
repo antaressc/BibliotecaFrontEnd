@@ -20,7 +20,11 @@ const fileInputRef = ref(null);
 const loading = ref(false);
 
 function voltarInicio() {
-  router.push({ name: 'livros' })
+  if (authStore.isAdmin) {
+    router.push({ name: 'admin' });
+  } else {
+    router.push({ name: 'livros' });
+  }
 }
 
 function syncForm() {

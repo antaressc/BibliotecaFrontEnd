@@ -112,14 +112,6 @@ function onBusca() {
     }, 400);
 }
 
-async function paginaAnterior() {
-    await usuarioStore.paginaAnterior();
-}
-
-async function proximaPagina() {
-    await usuarioStore.proximaPagina();
-}
-
 function formatarData(data) {
     if (!data) {
         return "-";
@@ -369,28 +361,6 @@ function voltarInicio() {
                             : "Ainda não existem usuários cadastrados."
                     }}
                 </p>
-            </div>
-
-            <div v-if="usuarioStore.meta.total_pages > 1" class="pagination">
-
-                <button type="button" class="btn btn-secondary" :disabled="usuarioStore.meta.page <= 1"
-                    @click="paginaAnterior">
-                    ← Anterior
-                </button>
-
-                <span>
-                    Página
-                    <strong>{{ usuarioStore.meta.page }}</strong>
-                    de
-                    <strong>{{ usuarioStore.meta.total_pages }}</strong>
-                </span>
-
-                <button type="button" class="btn btn-secondary" :disabled="usuarioStore.meta.page >=
-                    usuarioStore.meta.total_pages
-                    " @click="proximaPagina">
-                    Próxima →
-                </button>
-
             </div>
 
         </section>
@@ -700,14 +670,6 @@ th {
     margin: 0;
 }
 
-.pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-    margin-top: 25px;
-}
-
 @media (max-width: 900px) {
     .form-grid {
         grid-template-columns: 1fr;
@@ -745,9 +707,5 @@ th {
         width: 100%;
     }
 
-    .pagination {
-        flex-direction: column;
-        gap: 10px;
-    }
 }
 </style>

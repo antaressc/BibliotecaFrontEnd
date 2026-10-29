@@ -5,11 +5,10 @@ export default class UsuariosApi {
   async buscarTodosOsUsuarios(page = 1, search = "") {
     const { data } = await axios.get("/usuarios/", {
       params: {
-        page,
         search: search.trim()
       }
     });
-
+  
     return data;
   }
 

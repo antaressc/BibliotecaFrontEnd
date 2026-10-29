@@ -14,27 +14,17 @@ export const useUsuarioStore = defineStore("usuario", () => {
   const usuariosApi = new UsuariosApi();
 
   async function getUsuarios(page = 1, search = "") {
-    const data = await usuariosApi.buscarTodosOsUsuarios(
-      page,
-      search
-    );
-
-    usuarios.value = data.results || data;
-
-    if (data.count !== undefined) {
-      const pageSize = usuarios.value.length || 1;
-
-      meta.value = {
-        page,
-        total_pages: Math.ceil(data.count / pageSize),
-      };
-    } else {
-      meta.value = {
-        page: 1,
-        total_pages: 1,
-      };
-    }
-
+    const data = await usuariosApi.buscarTodosOsUsuarios(page, search);
+  
+    usuarios.value = Array.isArray(data)
+      ? data
+      : data.results || [];
+  
+    meta.value = {
+      page: 1,
+      total_pages: 1,
+    };
+  
     return data;
   }
 

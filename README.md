@@ -67,10 +67,14 @@ Dessa forma, é possível acompanhar todo o ciclo do livro, desde a reserva até
 
 ## 🛠️ Tecnologias
 
-* **Python**
-* **PDM**
-* **Banco de dados relacional**
+* **Vue.js 3**
+* **JavaScript**
 * **HTML5**
+* **CSS3**
+* **Vite**
+* **Axios**
+* **Vue Router**
+* **Pinia**
 
 ## 🚦 Status do projeto
 

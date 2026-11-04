@@ -15,13 +15,36 @@ export const useCategoriaStore = defineStore('categoria', () => {
 
   const currentSearch = ref('')
 
+  
   async function getCategorias(page = 1, search = '') {
     currentSearch.value = search
-    const data = await categoriaApi.buscarTodasAsCategorias(page, search)
-    categorias.value = data.results
-    meta.value.page = data.page
-    meta.value.page_size = data.page_size
-    meta.value.total_pages = data.total_pages
+  
+    const primeiraPagina = await categoriaApi.buscarTodasAsCategorias(1, search)
+    const todasAsCategorias = [...primeiraPagina.results]
+  
+    const totalPaginas = primeiraPagina.total_pages || 1
+  
+    if (totalPaginas > 1) {
+      const requisicoes = []
+    
+      for (let pagina = 2; pagina <= totalPaginas; pagina++) {
+        requisicoes.push(
+          categoriaApi.buscarTodasAsCategorias(pagina, search)
+        )
+      }
+    
+      const resultados = await Promise.all(requisicoes)
+    
+      for (const resultado of resultados) {
+        todasAsCategorias.push(...resultado.results)
+      }
+    }
+  
+    categorias.value = todasAsCategorias
+  
+    meta.value.page = primeiraPagina.page
+    meta.value.page_size = primeiraPagina.page_size
+    meta.value.total_pages = totalPaginas
   }
 
   async function search(text) {

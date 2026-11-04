@@ -17,11 +17,33 @@ export const useAutorStore = defineStore('autor', () => {
 
   async function getAutores(page = 1, search = '') {
     currentSearch.value = search
-    const data = await autorApi.buscarTodosOsAutores(page, search)
-    autores.value = data.results
-    meta.value.page = data.page
-    meta.value.page_size = data.page_size
-    meta.value.total_pages = data.total_pages
+
+    const primeiraPagina = await autorApi.buscarTodosOsAutores(1, search)
+    const todosOsAutores = [...primeiraPagina.results]
+
+    const totalPaginas = primeiraPagina.total_pages || 1
+
+    if (totalPaginas > 1) {
+      const requisicoes = []
+
+      for (let pagina = 2; pagina <= totalPaginas; pagina++) {
+        requisicoes.push(
+          autorApi.buscarTodosOsAutores(pagina, search)
+        )
+      }
+
+      const resultados = await Promise.all(requisicoes)
+
+      for (const resultado of resultados) {
+        todosOsAutores.push(...resultado.results)
+      }
+    }
+
+    autores.value = todosOsAutores
+
+    meta.value.page = primeiraPagina.page
+    meta.value.page_size = primeiraPagina.page_size
+    meta.value.total_pages = totalPaginas
   }
 
   async function search(text) {

@@ -223,6 +223,18 @@ async function irParaPagina(pagina) {
                 : 'Indisponível'
               }}
             </span>
+            
+            <div
+              v-if="Number(livro.quantidade) <= 0 && livro.data_devolucao_prevista"
+              class="data-devolucao-prevista"
+            >
+              Devolução prevista:
+              {{
+                new Date(livro.data_devolucao_prevista).toLocaleDateString('pt-BR', {
+                  timeZone: 'America/Sao_Paulo'
+                })
+              }}
+            </div>
 
             <div class="livro-botoes-mobile">
               
@@ -320,6 +332,13 @@ async function irParaPagina(pagina) {
   </div>
 </template>
 <style scoped>
+.data-devolucao-prevista {
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: #dc3545;
+  font-weight: 500;
+}
+
 .titulo {
   display: -webkit-box;
   -webkit-box-orient: vertical;

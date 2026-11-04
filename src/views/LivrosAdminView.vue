@@ -92,9 +92,30 @@ async function carregarOpcoes() {
       categoriaApi.buscarTodasAsCategorias(1)
     ])
 
-    autores.value =
-      autoresData.results || autoresData
-
+        
+    const autoresCarregados = [
+      ...(autoresData.results || autoresData)
+    ]
+      
+    const totalPaginasAutores = autoresData.total_pages || 1
+      
+    for (let pagina = 2; pagina <= totalPaginasAutores; pagina++) {
+      const resposta = await autorApi.buscarTodosOsAutores(pagina)
+    
+      autoresCarregados.push(
+        ...(resposta.results || resposta)
+      )
+    }
+    
+    const autoresUnicos = new Map()
+    
+    for (const autor of autoresCarregados) {
+      if (autor?.id != null && !autoresUnicos.has(autor.id)) {
+        autoresUnicos.set(autor.id, autor)
+      }
+    }
+    
+    autores.value = [...autoresUnicos.values()]
 
     const editorasCarregadas = [
       ...(editorasData.results || editorasData)

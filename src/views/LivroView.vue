@@ -76,23 +76,37 @@ function abrirModal() {
 async function reservarLivro(livroId) {
   try {
     await reservaStore.criarReserva(livroId)
-
-    mostrarPopup(
-      'Livro reservado com sucesso!',
-      'sucesso'
-    )
   } catch (error) {
     const data = error.response?.data
 
     const mensagem = Array.isArray(data)
       ? data[0]
       : data?.detail ||
-      data?.non_field_errors?.[0] ||
-      data?.message ||
-      'Erro ao reservar o livro.'
+        data?.non_field_errors?.[0] ||
+        data?.message ||
+        'Erro ao reservar o livro.'
 
     mostrarPopup(mensagem, 'erro')
+    return
   }
+
+  // A reserva foi concluída: atualizar a lista de livros.
+  try {
+    await livroStore.getLivros(
+      livroStore.meta.page,
+      livroStore.currentSearch,
+      livroStore.currentAutor,
+      livroStore.currentCategoria,
+      formato.value
+    )
+  } catch (error) {
+    console.error('Reserva realizada, mas não foi possível atualizar os livros:', error)
+  }
+
+  mostrarPopup(
+    'Livro reservado com sucesso!',
+    'sucesso'
+  )
 }
 
 async function aoSalvar() {
@@ -211,7 +225,8 @@ async function irParaPagina(pagina) {
             </span>
 
             <div class="livro-botoes-mobile">
-              <button class="btn btn-reservar btn-sm" @click.stop="reservarLivro(livro.id)" title="Reservar livro">
+              
+              <button v-if="livro.quantidade > 0" class="btn btn-reservar btn-sm" @click.stop="reservarLivro(livro.id)" title="Reservar livro">
                 Reservar
               </button>
 

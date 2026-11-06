@@ -383,8 +383,8 @@ async function irParaPagina(pagina) {
 }
 
 .livro-capa {
-  width: 150px;
-  height: 230px;
+  width: 145px;
+  height: 220px;
   object-fit: cover;
   border-radius: calc(var(--radius) - 2px);
 }
@@ -441,8 +441,8 @@ async function irParaPagina(pagina) {
 }
 
 .sinopse-capa {
-  width: 180px;
-  height: 260px;
+  width: 190px;
+  height: 300px;
   object-fit: cover;
   border-radius: var(--radius);
   border: 1px solid var(--border);

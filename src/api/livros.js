@@ -69,14 +69,6 @@ async buscarTodosOsLivros(
     return data;
   }
 
-  async buscarMaisVendidos() {
-    const { data } = await axios.get(
-      "/livros/mais_vendidos/"
-    );
-
-    return data;
-  }
-
   async adicionarAoCarrinho(
     id,
     quantidade = 1

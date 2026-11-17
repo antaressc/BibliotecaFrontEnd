@@ -92,29 +92,29 @@ async function carregarOpcoes() {
       categoriaApi.buscarTodasAsCategorias(1)
     ])
 
-        
+
     const autoresCarregados = [
       ...(autoresData.results || autoresData)
     ]
-      
+
     const totalPaginasAutores = autoresData.total_pages || 1
-      
+
     for (let pagina = 2; pagina <= totalPaginasAutores; pagina++) {
       const resposta = await autorApi.buscarTodosOsAutores(pagina)
-    
+
       autoresCarregados.push(
         ...(resposta.results || resposta)
       )
     }
-    
+
     const autoresUnicos = new Map()
-    
+
     for (const autor of autoresCarregados) {
       if (autor?.id != null && !autoresUnicos.has(autor.id)) {
         autoresUnicos.set(autor.id, autor)
       }
     }
-    
+
     autores.value = [...autoresUnicos.values()]
 
     const editorasCarregadas = [
@@ -504,28 +504,28 @@ async function editar(l) {
 
     <div class="form-row">
 
-      <div class="form-group">
-
+      <!-- LINHA 1 -->
+      <div class="form-group campo-titulo">
         <label class="label" for="livro-titulo">
           Título
         </label>
 
         <input class="input-livro" id="livro-titulo" type="text" v-model="livro.titulo" />
-
       </div>
 
-      <div class="form-group">
-
+      <div class="form-group campo-isbn">
         <label class="label" for="livro-isbn">
           ISBN
         </label>
 
         <input class="input-isbn" id="livro-isbn" type="text" v-model="livro.isbn" />
-
       </div>
 
-      <div class="form-group">
-        <label class="label" for="livro-formato">Formato:</label>
+      <div class="form-group campo-formato">
+        <label class="label" for="livro-formato">
+          Formato:
+        </label>
+
         <select id="livro-formato" v-model="livro.formato" class="input-formato">
           <option v-for="formato in formatos" :key="formato" :value="formato">
             {{ formato }}
@@ -533,11 +533,14 @@ async function editar(l) {
         </select>
       </div>
 
-      <div class="form-group">
-        <label class="label">Autores</label>
+      <div class="form-group campo-autores">
+        <label class="label">
+          Autores
+        </label>
 
         <div class="campo-com-adicionar">
           <div class="autores-dropdown">
+
             <button type="button" class="autores-select" @click="mostrarAutores = !mostrarAutores">
               <span v-if="!livro.autores.length">
                 Selecione os autores
@@ -547,7 +550,9 @@ async function editar(l) {
                 {{ livro.autores.length }} autor(es) selecionado(s)
               </span>
 
-              <span style="margin-left: 6px;">▾</span>
+              <span style="margin-left: 6px;">
+                ▾
+              </span>
             </button>
 
             <div v-if="mostrarAutores" class="autores-lista">
@@ -557,6 +562,7 @@ async function editar(l) {
                 <span>{{ autor.nome }}</span>
               </label>
             </div>
+
           </div>
 
           <button type="button" class="btn-adicionar-opcao" title="Adicionar autor" aria-label="Adicionar autor"
@@ -566,12 +572,16 @@ async function editar(l) {
         </div>
       </div>
 
-      <div class="form-group">
+
+      <!-- LINHA 2 -->
+      <div class="form-group campo-editora">
+
         <label class="label" for="livro-editora">
           Editora
         </label>
 
         <div class="campo-com-adicionar">
+
           <select id="livro-editora" class="input-editora" v-model="livro.editora">
             <option value="" disabled>
               Selecione uma editora
@@ -586,15 +596,19 @@ async function editar(l) {
             @click="abrirModalCadastro('editora')">
             +
           </button>
+
         </div>
       </div>
 
-      <div class="form-group">
+
+      <div class="form-group campo-categoria">
+
         <label class="label" for="livro-categoria">
           Categoria
         </label>
 
         <div class="campo-com-adicionar">
+
           <select id="livro-categoria" class="input-categoria" v-model="livro.categoria">
             <option value="" disabled>
               Selecione uma categoria
@@ -609,28 +623,38 @@ async function editar(l) {
             @click="abrirModalCadastro('categoria')">
             +
           </button>
+
         </div>
       </div>
 
-      <div class="form-group">
+
+      <div class="form-group campo-quantidade">
+
         <label class="label" for="livro-quantidade">
           Quantidade
         </label>
 
         <input class="input-quantidade" id="livro-quantidade" type="number" min="0" step="1"
           v-model.number="livro.quantidade" />
+
       </div>
 
-      <div class="form-group">
+
+      <!-- LINHA 3 -->
+      <div class="form-group campo-sinopse">
+
         <label class="label" for="livro-sinopse">
           Sinopse
         </label>
 
         <textarea class="input-sinopse" id="livro-sinopse" v-model="livro.sinopse"
           placeholder="Digite a sinopse do livro..." rows="4"></textarea>
+
       </div>
 
-      <div class="form-group">
+
+      <!-- LINHA 4 -->
+      <div class="form-group campo-capa">
 
         <label class="label" for="livro-capa">
           Capa
@@ -647,11 +671,12 @@ async function editar(l) {
 
       </div>
 
-      <button class="btn" @click="salvar">
+
+      <button class="btn btn-salvar" @click="salvar">
         {{ livro.id ? 'Atualizar' : 'Salvar' }}
       </button>
 
-      <button class="btn btn-outline" @click="limpar">
+      <button class="btn btn-outline btn-limpar" @click="limpar">
         Limpar
       </button>
 
@@ -756,7 +781,7 @@ async function editar(l) {
 </template>
 
 <style scoped>
-/* Campo de seleção com botão + */
+
 .campo-com-adicionar {
   display: flex;
   align-items: center;
@@ -775,7 +800,6 @@ async function editar(l) {
   min-width: 0;
 }
 
-/* Botão verde no estilo da imagem */
 .btn-adicionar-opcao {
   display: inline-flex;
   align-items: center;
@@ -805,7 +829,6 @@ async function editar(l) {
   cursor: not-allowed;
 }
 
-/* Janela modal */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -1119,5 +1142,110 @@ select option {
 
 .autor-option input {
   cursor: pointer;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    minmax(0, 1fr)
+    minmax(0, 1fr)
+    minmax(0, 1fr);
+
+  column-gap: 10px;
+  row-gap: 14px;
+
+  align-items: start;
+}
+
+.form-row > .form-group:nth-child(1) {
+  grid-column: 1;
+}
+
+.form-row > .form-group:nth-child(2) {
+  grid-column: 2;
+}
+
+.form-row > .form-group:nth-child(3) {
+  grid-column: 3;
+}
+
+.form-row > .form-group:nth-child(4) {
+  grid-column: 4;
+}
+
+.form-row > .form-group:nth-child(5) {
+  grid-column: 1 / span 2;
+}
+
+.form-row > .form-group:nth-child(6) {
+  grid-column: 3;
+}
+
+.form-row > .form-group:nth-child(7) {
+  grid-column: 4;
+}
+
+.form-row > .form-group:nth-child(8) {
+  grid-column: 1 / -1;
+}
+
+.form-row > .form-group:nth-child(9) {
+  grid-column: 1;
+}
+
+.form-row > .btn:not(.btn-outline) {
+  grid-column: 2;
+  align-self: end;
+}
+
+.form-row > .btn.btn-outline {
+  grid-column: 3;
+  align-self: end;
+}
+
+@media (max-width: 1000px) {
+  .form-row {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .form-row > .form-group:nth-child(1),
+  .form-row > .form-group:nth-child(2),
+  .form-row > .form-group:nth-child(3),
+  .form-row > .form-group:nth-child(4),
+  .form-row > .form-group:nth-child(5),
+  .form-row > .form-group:nth-child(6),
+  .form-row > .form-group:nth-child(7) {
+    grid-column: auto;
+  }
+
+  .form-row > .form-group:nth-child(8) {
+    grid-column: 1 / -1;
+  }
+
+  .form-row > .form-group:nth-child(9) {
+    grid-column: 1;
+  }
+
+  .form-row > .btn {
+    grid-column: auto;
+  }
+}
+
+
+@media (max-width: 650px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .form-row > .form-group:nth-child(8),
+  .form-row > .form-group:nth-child(9),
+  .form-row > .btn {
+    grid-column: auto;
+  }
+
+  .form-row > .btn {
+    width: 100%;
+  }
 }
 </style>

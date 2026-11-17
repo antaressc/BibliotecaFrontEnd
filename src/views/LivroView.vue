@@ -701,7 +701,6 @@ async function irParaPagina(pagina) {
     margin-top: 4px;
   }
 
-  /* Botões lado a lado no celular */
   .livro-info>div .livro-botoes-mobile {
     display: flex !important;
     flex-direction: row !important;
